@@ -1,8 +1,11 @@
+// src/utils/api.js or similar
 
-// API configuration
-export const API_URL = 'http://localhost:3000/api/v1';
+if (!import.meta.env.VITE_BACKEND_URL) {
+  throw new Error('VITE_BACKEND_URL environment variable is not defined');
+}
 
-// Header configuration
+export const API_URL = import.meta.env.VITE_BACKEND_URL + '/api/v1';
+
 export const getHeaders = (token) => {
   const headers = {
     'Content-Type': 'application/json',
