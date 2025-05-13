@@ -12,6 +12,7 @@ A Second Brain-style notes and content manager built using **Vite + React + Tail
 - 🏷️ Add tags to notes (coming soon)
 - 📤 Share your notes via unique brain links
 - 🔒 Access control via secure tokens
+- 🚀LLM introduced soon in application
 
 ---
 
