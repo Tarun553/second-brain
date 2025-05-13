@@ -1,4 +1,4 @@
-# 🧠 Second Brain - Notes Manager App
+# 🧠 Second Brain - Notes & Links Manager App
 
 A Second Brain-style notes and content manager built using **Vite + React + TailwindCSS** on the frontend, and **Express.js + MongoDB** on the backend. Think of it as your personal place to store tweets, links, and notes — and even share them with others!
 
