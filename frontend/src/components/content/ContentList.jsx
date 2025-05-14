@@ -11,34 +11,60 @@ const ContentList = ({ contentType, title, tagFilter }) => {
   const [isFormLoading, setIsFormLoading] = useState(false);
   const [shareLink, setShareLink] = useState(null);
   const [error, setError] = useState(null);
-  const { token } = useAuth();
+  const { authState } = useAuth();
+  const token = authState?.token;
+
+  useEffect(() => {
+    console.log('ContentList mounted, authState:', authState);
+    console.log('Token available:', token);
+    
+    if (token) {
+      console.log('Calling fetchContents from useEffect');
+      fetchContents();
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log('Dependencies changed, token:', token);
+    if (token) {
+      fetchContents();
+    }
+  }, [token, contentType, tagFilter, setShareLink]);
 
   const fetchContents = async () => {
-    if (!token) return;
+    if (!token) {
+      console.log('No token available, cannot fetch contents');
+      return;
+    }
     
     setIsLoading(true);
     setError(null);
     
     try {
+      console.log('Fetching contents with token:', token);
       const data = await getContents(token);
+      console.log('Received contents:', data);
       
       // Filter content based on type if specified
-      let filteredData = data;
-      if (contentType) {
+      let filteredData = data || [];
+      if (data && contentType) {
         filteredData = data.filter((item) => item.type === contentType);
+        console.log('Filtered by content type:', contentType, filteredData);
       }
       
       // Filter content based on tag if specified
-      if (tagFilter) {
+      if (data && tagFilter) {
         filteredData = filteredData.filter((item) => 
           item.tags && item.tags.includes(tagFilter)
         );
+        console.log('Filtered by tag:', tagFilter, filteredData);
       }
       
       setContents(filteredData);
     } catch (error) {
+      console.error('Error in fetchContents:', error);
       setError('Failed to load content. Please try again.');
-      console.error('Error fetching content:', error);
+      setContents([]);
     } finally {
       setIsLoading(false);
     }
@@ -73,10 +99,6 @@ const ContentList = ({ contentType, title, tagFilter }) => {
       console.error('Error deleting content:', error);
     }
   };
-
-  useEffect(() => {
-    // fetchContents();
-  }, [token, contentType, tagFilter, setShareLink]);
 
   return (
     <div>

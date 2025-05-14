@@ -21,11 +21,11 @@ const userSchema = new mongoose.Schema({
  
  // content schema 
  const contentSchema = new mongoose.Schema({
-     title: String,
+     title: { type: String, required: true },
      link: { type: String, required: true },
-     type: { type: String, enum: contentTypes, required: true },
-     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-     tagId: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }]
+     type: { type: String, enum: ['link', 'tweet', 'video', 'document'], required: true },
+     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+     tags: { type: [String], default: [] }
  });
  
  // link schema

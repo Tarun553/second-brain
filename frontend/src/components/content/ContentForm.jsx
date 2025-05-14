@@ -8,6 +8,7 @@ const ContentForm = ({ onSubmit, isLoading }) => {
   const [tag, setTag] = useState('');
   const [tags, setTags] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [error, setError] = useState(null);
 
   const contentTypes = [
     { value: 'tweet', label: 'Tweet' },
@@ -37,10 +38,6 @@ const ContentForm = ({ onSubmit, isLoading }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!title.trim() || !link.trim()) {
-      return;
-    }
-    
     const formData = {
       title: title.trim(),
       link: link.trim(),
@@ -48,6 +45,18 @@ const ContentForm = ({ onSubmit, isLoading }) => {
       tags,
     };
     
+    // Validate form data
+    if (!formData.title.trim()) {
+      setError('Title is required');
+      return;
+    }
+    
+    if (!formData.link.trim()) {
+      setError('Link is required');
+      return;
+    }
+    
+    console.log('Submitting content:', formData);
     try {
       await onSubmit(formData);
       // Reset form on success
@@ -56,6 +65,7 @@ const ContentForm = ({ onSubmit, isLoading }) => {
       setType('link');
       setTags([]);
       setIsFormOpen(false);
+      setError(null);
     } catch (error) {
       console.error('Error submitting content:', error);
     }
@@ -84,6 +94,9 @@ const ContentForm = ({ onSubmit, isLoading }) => {
           </div>
 
           <form onSubmit={handleSubmit}>
+            {error && (
+              <div className="mb-4 text-red-500">{error}</div>
+            )}
             <div className="mb-4">
               <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
                 Title
